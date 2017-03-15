@@ -1,8 +1,8 @@
 apply plugin: 'maven'
 
-def groupId = project.PUBLISH_GROUP_ID
-def artifactId = project.PUBLISH_ARTIFACT_ID
-def version = project.PUBLISH_VERSION
+def groupId = project.publishedGroupId
+def artifactId = project.artifact
+def version = project.libraryVersion
 
 def localReleaseDest = "${buildDir}/release/${version}"
 
