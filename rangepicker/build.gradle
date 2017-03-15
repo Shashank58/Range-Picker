@@ -1,15 +1,41 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'range-picker'
+
+    publishedGroupId = 'shashank.com.customrange'
+    libraryName = 'RangePicker'
+    artifact = 'range-picker'
+
+    libraryDescription = 'A library for picking range for android'
+
+    siteUrl = 'https://github.com/Shashank58/Range-Picker'
+    gitUrl = 'https://github.com/Shashank58/Range-Picker.git'
+
+    libraryVersion = '1.0.0'
+
+    developerId = 'shashank58'
+    developerName = 'Shashank M'
+    developerEmail = 'shashank.shashi2@gmail.com'
+
+    licenseName = 'GNU General Public License version 3'
+    licenseUrl = 'https://opensource.org/licenses/gpl-3.0.html'
+    allLicenses = ["GPL-3.0"]
+}
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
+
     defaultConfig {
-        applicationId "shashank.com.customrange"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -25,7 +51,4 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
-    compile project(":rangepicker")
 }

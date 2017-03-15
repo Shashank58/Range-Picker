@@ -1,4 +1,4 @@
-package shashank.com.customrange;
+package shashank.com.rangepicker;
 
 import android.annotation.TargetApi;
 import android.content.Context;
