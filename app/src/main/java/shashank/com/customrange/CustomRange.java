@@ -2,11 +2,15 @@ package shashank.com.customrange;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -15,34 +19,42 @@ import android.view.View;
  */
 public class CustomRange extends View implements View.OnTouchListener {
     private static final String TAG = CustomRange.class.getSimpleName();
+    private static final float DEFAULT_HOLDER_WIDTH = 16f;
 
     private enum DragPosition {
         START, END, NOT_DEFINED
     }
 
     private int startPosition = 0;
+
     private int endPosition = 100;
+
     private DragPosition draggingPosition = DragPosition.NOT_DEFINED;
+
     private Paint progressPaint;
-    private Context context;
+
+    private int holderColor;
+
+    private float holderWidth;
+
+    private int nonSelectedColor;
+
+    private int selectedColor;
 
     public CustomRange(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
-        init(attrs);
+        init(attrs, context);
     }
 
     public CustomRange(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs);
-        this.context = context;
+        init(attrs, context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public CustomRange(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(attrs);
-        this.context = context;
+        init(attrs, context);
     }
 
     @Override
@@ -53,35 +65,38 @@ public class CustomRange extends View implements View.OnTouchListener {
         int endX = getWidth() * endPosition / 100;
 
         // draw the part of the bar that's filled
-        progressPaint.setStyle(Paint.Style.FILL);
-        progressPaint.setStrokeWidth(getHeight());
+        //noinspection SuspiciousNameCombination
+        progressPaint.setStrokeWidth(height);
 
-        //progressPaint.setColor(ContextCompat.getColor(context, R.color.grey_300));
+        progressPaint.setColor(nonSelectedColor);
         canvas.drawLine(0, halfHeight, startX, halfHeight, progressPaint);
 
-        //progressPaint.setColor(ContextCompat.getColor(context, R.color.teal_500));
-        canvas.drawLine(startX + 15, halfHeight, endX - 15, halfHeight, progressPaint);
+        progressPaint.setColor(selectedColor);
+        canvas.drawLine(startX + 10, halfHeight, endX - 10, halfHeight, progressPaint);
 
         // draw the unfilled section
-        //progressPaint.setColor(ContextCompat.getColor(context, R.color.grey_300));
+        progressPaint.setColor(nonSelectedColor);
         canvas.drawLine(endX, halfHeight, getWidth(), halfHeight, progressPaint);
 
-        //progressPaint.setColor(ContextCompat.getColor(context, R.color.white));
-        progressPaint.setStrokeWidth(30f);
+        progressPaint.setColor(holderColor);
+        progressPaint.setStrokeWidth(holderWidth);
         canvas.drawLine(startX + 10, height, startX + 10, 0, progressPaint);
         canvas.drawLine(endX - 10, height, endX - 10, 0, progressPaint);
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        int dragPoint = (int) (100 + (((event.getX() - v.getWidth()) / v.getWidth()) * 100));
+
+        if (dragPoint <= 0 || dragPoint >= 100) return true;
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                int percent = (int) (100 + (((event.getX() - v.getWidth()) / v.getWidth()) * 100));
-                if (isCloseToStart(percent)) {
-                    startPosition = percent;
+                if (isCloseToStart(dragPoint)) {
+                    startPosition = dragPoint;
                     draggingPosition = DragPosition.START;
                 } else {
-                    endPosition = percent;
+                    endPosition = dragPoint;
                     draggingPosition = DragPosition.END;
                 }
                 invalidate();
@@ -89,10 +104,6 @@ public class CustomRange extends View implements View.OnTouchListener {
 
             case MotionEvent.ACTION_MOVE:
                 if (draggingPosition == DragPosition.NOT_DEFINED) return true;
-
-                int dragPoint = (int) (100 + (((event.getX() - v.getWidth()) / v.getWidth()) * 100));
-
-                if (dragPoint <= 0 || dragPoint >= 100) return true;
 
                 if (draggingPosition == DragPosition.START && dragPoint < (endPosition - 10)) {
                     startPosition = dragPoint;
@@ -114,10 +125,26 @@ public class CustomRange extends View implements View.OnTouchListener {
         return Math.abs(percent - startPosition) < Math.abs(percent - endPosition);
     }
 
-    private void init(AttributeSet attrs) {
+    private void init(AttributeSet attrs, Context context) {
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomRange);
+        try {
+            holderColor = typedArray.getColor(R.styleable.CustomRange_holderColor, Color.WHITE);
+            holderWidth = typedArray.getDimension(R.styleable.CustomRange_holderWidth, convertDpToPixel(DEFAULT_HOLDER_WIDTH, context));
+            nonSelectedColor = typedArray.getColor(R.styleable.CustomRange_nonSelectedColor, Color.GRAY);
+            selectedColor = typedArray.getColor(R.styleable.CustomRange_selectedColor, Color.GREEN);
+        } finally {
+            typedArray.recycle();
+        }
+
         progressPaint = new Paint();
         progressPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         setOnTouchListener(this);
+    }
+
+    private float convertDpToPixel(float dp, Context context) {
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        return dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 }
 
