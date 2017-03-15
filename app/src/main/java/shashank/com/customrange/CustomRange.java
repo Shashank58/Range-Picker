@@ -20,10 +20,21 @@ import android.view.View;
 public class CustomRange extends View implements View.OnTouchListener {
     private static final String TAG = CustomRange.class.getSimpleName();
 
+    /**
+     * Default holder view width for the range bar
+     */
     private static final float DEFAULT_HOLDER_WIDTH = 16f;
 
+    /**
+     * Default min value for the range bar. It's recommended to change this to your needs
+     * either through xml or with {@link CustomRange#setMinValue(float)}
+     */
     private static final float DEFAULT_MIN_VALUE = 0f;
 
+    /**
+     * Default max value for the range bar. It's recommended to change this to your needs
+     * either through xml or with {@link CustomRange#setMaxValue(float)}
+     */
     private static final float DEFAULT_MAX_VALUE = 100f;
 
     private enum DragPosition {
@@ -73,21 +84,23 @@ public class CustomRange extends View implements View.OnTouchListener {
         int startX = getWidth() * startPosition / 100;
         int endX = getWidth() * endPosition / 100;
 
-
         // draw the part of the bar that's filled
-        //noinspection SuspiciousNameCombination
+        // noinspection SuspiciousNameCombination
         progressPaint.setStrokeWidth(height);
 
+        // draw non selected color before start position
         progressPaint.setColor(nonSelectedColor);
         canvas.drawLine(0, halfHeight, startX, halfHeight, progressPaint);
 
+        // draw selected color
         progressPaint.setColor(selectedColor);
         canvas.drawLine(startX + (holderWidth / 2), halfHeight, endX - (holderWidth / 2), halfHeight, progressPaint);
 
-        // draw the unfilled section
+        // draw the unfilled section after end position
         progressPaint.setColor(nonSelectedColor);
         canvas.drawLine(endX, halfHeight, getWidth(), halfHeight, progressPaint);
 
+        // draw holders before start and after end position
         progressPaint.setColor(holderColor);
         progressPaint.setStrokeWidth(holderWidth);
         canvas.drawLine(startX + (holderWidth / 2), height, startX + (holderWidth / 2), 0, progressPaint);
@@ -96,6 +109,7 @@ public class CustomRange extends View implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        // scale down drag point in terms of 100
         int dragPoint = (int) (100 + (((event.getX() - v.getWidth()) / v.getWidth()) * 100));
 
         if (dragPoint <= 0 || dragPoint >= 100) return true;
