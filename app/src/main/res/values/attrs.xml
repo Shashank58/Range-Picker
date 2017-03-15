@@ -5,5 +5,7 @@
         <attr name="selectedColor" format="color"/>
         <attr name="holderColor" format="color"/>
         <attr name="holderWidth" format="dimension"/>
+        <attr name="minValue" format="float" />
+        <attr name="maxValue" format="float" />
     </declare-styleable>
 </resources>

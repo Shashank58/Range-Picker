@@ -19,7 +19,12 @@ import android.view.View;
  */
 public class CustomRange extends View implements View.OnTouchListener {
     private static final String TAG = CustomRange.class.getSimpleName();
+
     private static final float DEFAULT_HOLDER_WIDTH = 16f;
+
+    private static final float DEFAULT_MIN_VALUE = 0f;
+
+    private static final float DEFAULT_MAX_VALUE = 100f;
 
     private enum DragPosition {
         START, END, NOT_DEFINED
@@ -40,6 +45,10 @@ public class CustomRange extends View implements View.OnTouchListener {
     private int nonSelectedColor;
 
     private int selectedColor;
+
+    private float minValue;
+
+    private float maxValue;
 
     public CustomRange(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -64,6 +73,7 @@ public class CustomRange extends View implements View.OnTouchListener {
         int startX = getWidth() * startPosition / 100;
         int endX = getWidth() * endPosition / 100;
 
+
         // draw the part of the bar that's filled
         //noinspection SuspiciousNameCombination
         progressPaint.setStrokeWidth(height);
@@ -72,7 +82,7 @@ public class CustomRange extends View implements View.OnTouchListener {
         canvas.drawLine(0, halfHeight, startX, halfHeight, progressPaint);
 
         progressPaint.setColor(selectedColor);
-        canvas.drawLine(startX + 10, halfHeight, endX - 10, halfHeight, progressPaint);
+        canvas.drawLine(startX + (holderWidth / 2), halfHeight, endX - (holderWidth / 2), halfHeight, progressPaint);
 
         // draw the unfilled section
         progressPaint.setColor(nonSelectedColor);
@@ -80,8 +90,8 @@ public class CustomRange extends View implements View.OnTouchListener {
 
         progressPaint.setColor(holderColor);
         progressPaint.setStrokeWidth(holderWidth);
-        canvas.drawLine(startX + 10, height, startX + 10, 0, progressPaint);
-        canvas.drawLine(endX - 10, height, endX - 10, 0, progressPaint);
+        canvas.drawLine(startX + (holderWidth / 2), height, startX + (holderWidth / 2), 0, progressPaint);
+        canvas.drawLine(endX - (holderWidth / 2), height, endX - (holderWidth / 2), 0, progressPaint);
     }
 
     @Override
@@ -121,6 +131,30 @@ public class CustomRange extends View implements View.OnTouchListener {
         return false;
     }
 
+    public float getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(float minValue) {
+        this.minValue = minValue;
+    }
+
+    public float getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(float maxValue) {
+        this.maxValue = maxValue;
+    }
+
+    public float getStartValue() {
+        return (startPosition / 100 ) * maxValue;
+    }
+
+    public float getEndValue() {
+        return (endPosition / 100) * maxValue;
+    }
+
     private boolean isCloseToStart(int percent) {
         return Math.abs(percent - startPosition) < Math.abs(percent - endPosition);
     }
@@ -132,6 +166,8 @@ public class CustomRange extends View implements View.OnTouchListener {
             holderWidth = typedArray.getDimension(R.styleable.CustomRange_holderWidth, convertDpToPixel(DEFAULT_HOLDER_WIDTH, context));
             nonSelectedColor = typedArray.getColor(R.styleable.CustomRange_nonSelectedColor, Color.GRAY);
             selectedColor = typedArray.getColor(R.styleable.CustomRange_selectedColor, Color.GREEN);
+            minValue = typedArray.getFloat(R.styleable.CustomRange_minValue, DEFAULT_MIN_VALUE);
+            maxValue = typedArray.getFloat(R.styleable.CustomRange_maxValue, DEFAULT_MAX_VALUE);
         } finally {
             typedArray.recycle();
         }
