@@ -1,6 +1,5 @@
 # Range Picker
 
-____
 
 This can be used to pick a range between a min and max point. This library was originally created to facilitate
 in selecting the time range for trimming videos.
@@ -24,6 +23,7 @@ in selecting the time range for trimming videos.
           android:layout_margin="36dp"
           app:nonSelectedColor="@color/grey_300"
           app:holderWidth="16dp"
+          app:holderColor="@color/white"
           app:selectedColor="@color/colorPrimary"
           app:minValue="0"
           app:maxValue="100"
