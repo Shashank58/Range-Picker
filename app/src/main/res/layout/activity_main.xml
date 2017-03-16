@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EEEEEE"
     >
 
     <shashank.com.rangepicker.CustomRange
@@ -13,6 +14,8 @@
         app:nonSelectedColor="@color/grey_300"
         app:holderWidth="16dp"
         app:selectedColor="@color/colorPrimary"
+        app:minValue="0"
+        app:maxValue="100"
         />
 
 </LinearLayout>
