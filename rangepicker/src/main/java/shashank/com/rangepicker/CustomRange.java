@@ -61,6 +61,12 @@ public class CustomRange extends View implements View.OnTouchListener {
 
     private float maxValue;
 
+    private RangeChangeListener rangeChangeListener;
+
+    public interface RangeChangeListener {
+        void onRangeChanged(float startValue, float endValue);
+    }
+
     public CustomRange(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(attrs, context);
@@ -75,6 +81,10 @@ public class CustomRange extends View implements View.OnTouchListener {
     public CustomRange(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(attrs, context);
+    }
+
+    public void serRangeChangeListener(RangeChangeListener rangeChangeListener) {
+        this.rangeChangeListener = rangeChangeListener;
     }
 
     @Override
@@ -123,6 +133,12 @@ public class CustomRange extends View implements View.OnTouchListener {
                     endPosition = dragPoint;
                     draggingPosition = DragPosition.END;
                 }
+
+                if (rangeChangeListener != null) {
+                    rangeChangeListener.onRangeChanged((startPosition / 100 ) * maxValue,
+                            (endPosition / 100) * maxValue);
+                }
+
                 invalidate();
                 return true;
 
@@ -133,6 +149,11 @@ public class CustomRange extends View implements View.OnTouchListener {
                     startPosition = dragPoint;
                 } else if (draggingPosition == DragPosition.END && dragPoint > (startPosition + 10)) {
                     endPosition = dragPoint;
+                }
+
+                if (rangeChangeListener != null) {
+                    rangeChangeListener.onRangeChanged((startPosition / 100 ) * maxValue,
+                            (endPosition / 100) * maxValue);
                 }
 
                 invalidate();
