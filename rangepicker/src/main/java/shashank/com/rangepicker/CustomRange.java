@@ -83,7 +83,7 @@ public class CustomRange extends View implements View.OnTouchListener {
         init(attrs, context);
     }
 
-    public void serRangeChangeListener(RangeChangeListener rangeChangeListener) {
+    public void setRangeChangeListener(RangeChangeListener rangeChangeListener) {
         this.rangeChangeListener = rangeChangeListener;
     }
 

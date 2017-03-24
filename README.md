@@ -36,3 +36,26 @@ in selecting the time range for trimming videos.
   mCustomRange.getMinValue();
   mCustomRange.setMaxValue(12.5);
   ```
+
+  If you need a callback when range change you need to implement RangeChangeListener
+
+  ```java
+  class YourActivity implements RangeChangeListener {
+    private CustomRange mCustomRange;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Find view
+
+        mCustomRange.setRangeChangeListener(this);
+    }
+
+    @Override
+    public void onRangeChanged(float startValue, float endValue) {
+
+    }
+  }
+  ```
