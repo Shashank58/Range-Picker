@@ -40,7 +40,7 @@ in selecting the time range for trimming videos.
   If you need a callback when range change you need to implement RangeChangeListener
 
   ```java
-  class YourActivity implements RangeChangeListener {
+  class YourActivity extends AppCompactActivity implements RangeChangeListener {
     private CustomRange mCustomRange;
 
     @Override
