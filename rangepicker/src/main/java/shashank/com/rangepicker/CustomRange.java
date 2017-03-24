@@ -122,7 +122,7 @@ public class CustomRange extends View implements View.OnTouchListener {
         // scale down drag point in terms of 100
         int dragPoint = (int) (100 + (((event.getX() - v.getWidth()) / v.getWidth()) * 100));
 
-        if (dragPoint <= 0 || dragPoint >= 100) return true;
+        if (dragPoint < 0 || dragPoint > 100) return true;
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -135,8 +135,9 @@ public class CustomRange extends View implements View.OnTouchListener {
                 }
 
                 if (rangeChangeListener != null) {
-                    rangeChangeListener.onRangeChanged((startPosition / 100 ) * maxValue,
-                            (endPosition / 100) * maxValue);
+                    float startValue = startPosition * (maxValue / 100);
+                    float endValue = endPosition * (maxValue / 100);
+                    rangeChangeListener.onRangeChanged(startValue, endValue);
                 }
 
                 invalidate();
@@ -152,8 +153,9 @@ public class CustomRange extends View implements View.OnTouchListener {
                 }
 
                 if (rangeChangeListener != null) {
-                    rangeChangeListener.onRangeChanged((startPosition / 100 ) * maxValue,
-                            (endPosition / 100) * maxValue);
+                    float startValue = startPosition * (maxValue / 100);
+                    float endValue = endPosition * (maxValue / 100);
+                    rangeChangeListener.onRangeChanged(startValue, endValue);
                 }
 
                 invalidate();

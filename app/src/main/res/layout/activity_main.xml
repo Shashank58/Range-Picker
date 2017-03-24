@@ -8,6 +8,7 @@
     >
 
     <shashank.com.rangepicker.CustomRange
+        android:id="@+id/custom_range"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_margin="36dp"
