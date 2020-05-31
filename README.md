@@ -8,8 +8,6 @@ in selecting the time range for trimming videos.
 ![croppedgif](https://cloud.githubusercontent.com/assets/13211441/23983001/5afd6ca2-0a37-11e7-9167-d488ec5b28f0.gif)
 
 
-
-
 ## Usage
 
   * Include library to your app build.gradle
